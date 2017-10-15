@@ -1,0 +1,8 @@
+celery
+http://stackoverflow.com/questions/2129820/how-can-i-set-up-celery-to-call-a-custom-initialization-function-before-running
+
+python
+http://stackoverflow.com/questions/423379/using-global-variables-in-a-function-other-than-the-one-that-created-them
+
+Remarks:
+If you use global for celery worker, dont use threads or it might fuck up.

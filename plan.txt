@@ -1,0 +1,80 @@
+Requirements
+http://stackoverflow.com/questions/28782512/getting-python-numba-working-on-ubuntu-14-10-or-fedora-21-with-python-2-7
+
+engine
+
+database connects to engine.
+Engine manages database and user is not knowing about it
+
+Our plan is that if there is a tag involved we raise TagException else others.
+
+
+Make flask front-end and test these out.
+
+
+What we need and what we have and what we need to do.
+
+What we can manage with right now.
+
+1) We can have neo4j and webserver in same machine.
+   so direct localhost is fine.
+
+2) We will do caching. We only store the 2D som in cache once training is done.
+   In cache we store MD5 hash(or locality preserving hash) of web url. We then fetch articles near this articles.
+   We make a 2D map in redis and a key value pair which maps MD5 to index. We can also store multiple MD5 in a
+   single Array index. So in index we need a data structure with (first 3 lines text, and a few tags, may be
+   path to an image also. Image we directly link to other website. or we make a thumbnail ). It should be a list.
+
+3) Should support 1000 users at a time.
+
+4) Make a pretty Good UI
+
+
+OUR IDEA
+
+We make a BIG SOM, and add articles in to it. We need to store it somewhere. We just need an n-dimensional array.
+Here we start with just 2 dimensions. A large 2D array will suffice. But no much thinking here, we will store everything
+in neo4j.
+
+Observations:
+
+Once training is complete, documents just involve fetching values from the 2D table.
+So we do crawling and training in a different service and fetching values in a different service.
+
+
+TODO
+
+1) Make crawling and database updating service.
+2) Make training + cache updating service.
+3) Make cache fetching + display service. (2)
+4) Make UI (1)
+
+
+Services for different websites.
+
+Pocket:
+   pocketService sits there and handles all request to getpocket.com.
+
+Todo Concept Plan
+
+Train a SOM with wikipedia data (subset). (Store it somewhere so you dont have to recompute it everytime).
+Initialize weights SOM size (200*200)
+Generate a one row line with random vector. (We need to store our old random vector and use it here and simply
+multiply it there, problem solved. For incremental training)
+Incrementally train SOM. (When Vocabulary increases we train the whole map again, say when changes in range of
+1000)
+(So make celery work together with a shared memory). (Also store a position of last winning node)
+
+Celery offers methods to allow a worker to fetch input from a single queue. If we attach a process to a queue,
+it can act like a service and that service can be used by pushing tasks in to that queue.
+
+Implement a trainer separate from celery for training, using OpenMP.
+I think we might need a new service for that. Or try to use celery for that.
+
+Plan
+
+Grid 20 * 20 (for now)
+Add url links to winning nodes
+
+How to :
+
